@@ -9,18 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
 {
-
-Schema::create('answers', function (Blueprint $table) {
-    $table->id();
-    $table->unsignedBigInteger('question_id');
-    $table->unsignedBigInteger('clinic_id');
-    $table->text('answer');
-    $table->timestamps();
-});
-
-
+    Schema::table('clinics', function (Blueprint $table) {
+        $table->string('message')->nullable();
+    });
 }
 
     /**
@@ -28,6 +21,8 @@ Schema::create('answers', function (Blueprint $table) {
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+        Schema::table('clinics', function (Blueprint $table) {
+            //
+        });
     }
 };
