@@ -23,6 +23,9 @@ export default function ClinicDashboard() {
   });
   const [requestSubmitting, setRequestSubmitting] = useState(false);
 
+  // ✅ Only show questions that don't have an answer yet
+  const pendingQuestions = questions.filter((q) => !q.answer);
+
   const loadClinic = async () => {
     try {
       const res = await api.get("/my-clinic");
@@ -192,33 +195,34 @@ export default function ClinicDashboard() {
               Approved Clinic ✔
             </h2>
 
-            {questions.length === 0 ? (
+            {pendingQuestions.length === 0 ? (
               <div className="bg-white p-6 rounded-2xl text-center text-gray-500">
-                No questions from pet owners yet.
+                🎉 No pending questions. All caught up!
               </div>
             ) : (
               <div className="grid gap-4">
-                {questions.map((q) => (
-                  <div key={q.id} className="bg-white p-4 rounded-xl shadow">
+                {pendingQuestions.map((q) => (
+                  <div
+                    key={q.id}
+                    className="bg-white p-4 rounded-xl shadow border-l-4 border-yellow-400"
+                  >
 
-                    <h3 className="font-bold">{q.title}</h3>
-                    <p>{q.description}</p>
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="font-bold">{q.title}</h3>
 
-                    {q.answer ? (
-                      <div className="mt-3 bg-green-50 p-3 rounded">
-                        <p className="text-sm text-green-700 font-semibold">
-                          Your Answer:
-                        </p>
-                        <p className="text-sm text-gray-700">{q.answer}</p>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => openAnswerModal(q)}
-                        className="mt-3 bg-green-600 text-white px-4 py-1 rounded"
-                      >
-                        Answer
-                      </button>
-                    )}
+                      <span className="flex items-center gap-1 bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap">
+                        ⏳ Pending
+                      </span>
+                    </div>
+
+                    <p className="mt-1">{q.description}</p>
+
+                    <button
+                      onClick={() => openAnswerModal(q)}
+                      className="mt-3 bg-green-600 text-white px-4 py-1 rounded"
+                    >
+                      Answer
+                    </button>
 
                   </div>
                 ))}
